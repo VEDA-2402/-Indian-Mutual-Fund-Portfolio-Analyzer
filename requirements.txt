@@ -10,6 +10,9 @@ yfinance>=0.2.37
 # Visualization
 plotly>=5.20.0
 
+# PDF Export
+reportlab>=4.0.0
+
 # Utilities
 python-dotenv>=1.0.0
 requests>=2.31.0
