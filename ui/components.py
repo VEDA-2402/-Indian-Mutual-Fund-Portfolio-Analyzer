@@ -720,27 +720,361 @@ def render_error(message: str):
 
 
 def render_loading_placeholder():
-    # Centered empty state illustration
-    left, center, right = st.columns([1, 2, 1])
-    with center:
-        try:
-            st.image("logo/empty_state.png", use_container_width=True)
-        except Exception:
-            pass
-        st.markdown(
-            """
-            <div style="text-align:center; padding: 10px 0 4px 0;">
-                <h3 style="margin-bottom:4px;">Build Your Portfolio</h3>
-                <p style="color:gray; font-size:15px;">Search for mutual funds on the left and add them to start analyzing.</p>
+    # -----------------------------------------------------------------------
+    # Hero Section
+    # -----------------------------------------------------------------------
+    st.markdown(
+        """
+        <div style="text-align:center; padding: 2rem 1rem 1rem 1rem;">
+            <h1 style="font-size:2.6rem; font-weight:800; margin-bottom:0.3rem;">
+                📈 Indian MF Portfolio Analyzer
+            </h1>
+            <p style="font-size:1.15rem; color:#6C757D; max-width:620px; margin:0 auto 1.2rem auto;">
+                Professional-grade portfolio analysis for Indian mutual funds —
+                returns, risk, correlation, health score, and AI-powered recommendations.
+                All powered by real AMFI data.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # -----------------------------------------------------------------------
+    # Live Stats Bar
+    # -----------------------------------------------------------------------
+    st.markdown(
+        """
+        <div style="
+            display:flex; justify-content:center; gap:2rem;
+            background: linear-gradient(135deg, #0D1B2A 0%, #1A3550 100%);
+            border-radius:12px; padding:1.2rem 2rem; margin:0.5rem 0 1.5rem 0;
+            flex-wrap:wrap;
+        ">
+            <div style="text-align:center; color:white;">
+                <div style="font-size:1.8rem; font-weight:800; color:#4FC3F7;">10,000+</div>
+                <div style="font-size:0.8rem; color:#90CAF9;">Mutual Funds Tracked</div>
+            </div>
+            <div style="text-align:center; color:white;">
+                <div style="font-size:1.8rem; font-weight:800; color:#81C784;">Live</div>
+                <div style="font-size:0.8rem; color:#90CAF9;">AMFI NAV Data</div>
+            </div>
+            <div style="text-align:center; color:white;">
+                <div style="font-size:1.8rem; font-weight:800; color:#FFB74D;">6</div>
+                <div style="font-size:0.8rem; color:#90CAF9;">Rolling Return Windows</div>
+            </div>
+            <div style="text-align:center; color:white;">
+                <div style="font-size:1.8rem; font-weight:800; color:#F48FB1;">100</div>
+                <div style="font-size:0.8rem; color:#90CAF9;">Portfolio Health Score</div>
+            </div>
+            <div style="text-align:center; color:white;">
+                <div style="font-size:1.8rem; font-weight:800; color:#CE93D8;">3</div>
+                <div style="font-size:0.8rem; color:#90CAF9;">AI Portfolio Options</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # -----------------------------------------------------------------------
+    # Quick Start — pre-loads 3 famous funds on click
+    # -----------------------------------------------------------------------
+    QUICK_START_FUNDS = {
+        "118778": "Parag Parikh Flexi Cap Fund - Regular Plan - Growth",
+        "120503": "Mirae Asset Large Cap Fund - Regular Plan - Growth",
+        "125497": "Nippon India Small Cap Fund - Regular Plan - Growth",
+    }
+
+    st.markdown(
+        """
+        <div style="text-align:center; margin-bottom:0.5rem;">
+            <p style="color:#6C757D; font-size:0.95rem;">
+                Not sure where to start? Load a sample portfolio instantly:
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    qs_col1, qs_col2, qs_col3 = st.columns([1, 2, 1])
+    with qs_col2:
+        if st.button(
+            "⚡ Quick Start — Load Sample Portfolio",
+            use_container_width=True,
+            type="primary",
+            help="Loads Parag Parikh Flexi Cap + Mirae Asset Large Cap + Nippon Small Cap",
+        ):
+            if "portfolio_basket" not in st.session_state:
+                st.session_state.portfolio_basket = {}
+            st.session_state.portfolio_basket.update(QUICK_START_FUNDS)
+            st.rerun()
+
+    st.markdown(
+        "<p style='text-align:center; color:#9E9E9E; font-size:0.8rem; margin-top:0.3rem;'>"
+        "Parag Parikh Flexi Cap &nbsp;•&nbsp; Mirae Asset Large Cap &nbsp;•&nbsp; Nippon Small Cap"
+        "</p>",
+        unsafe_allow_html=True,
+    )
+
+    st.divider()
+
+    # -----------------------------------------------------------------------
+    # Feature Cards
+    # -----------------------------------------------------------------------
+    st.markdown(
+        "<h3 style='text-align:center; margin-bottom:1rem;'>What you get</h3>",
+        unsafe_allow_html=True,
+    )
+
+    f1, f2, f3, f4 = st.columns(4)
+
+    f1.markdown(
+        """
+        <div style="background:#000000; border-radius:10px; padding:1rem; text-align:center; height:140px;">
+            <div style="font-size:2rem;">📊</div>
+            <div style="font-weight:700; margin:0.3rem 0 0.2rem; color:#ffffff;">Rolling Returns</div>
+            <div style="font-size:0.8rem; color:#cccccc;">1M · 3M · 6M · 1Y · 3Y · 5Y windows with benchmark overlay</div>
+        </div>
+        """, unsafe_allow_html=True,
+    )
+    f2.markdown(
+        """
+        <div style="background:#000000; border-radius:10px; padding:1rem; text-align:center; height:140px;">
+            <div style="font-size:2rem;">⚡</div>
+            <div style="font-weight:700; margin:0.3rem 0 0.2rem; color:#ffffff;">Risk Analysis</div>
+            <div style="font-size:0.8rem; color:#cccccc;">Sharpe ratio, max drawdown, volatility and correlation matrix</div>
+        </div>
+        """, unsafe_allow_html=True,
+    )
+    f3.markdown(
+        """
+        <div style="background:#000000; border-radius:10px; padding:1rem; text-align:center; height:140px;">
+            <div style="font-size:2rem;">🤖</div>
+            <div style="font-weight:700; margin:0.3rem 0 0.2rem; color:#ffffff;">AI Recommender</div>
+            <div style="font-size:0.8rem; color:#cccccc;">3 diversified portfolio options based on your risk profile</div>
+        </div>
+        """, unsafe_allow_html=True,
+    )
+    f4.markdown(
+        """
+        <div style="background:#000000; border-radius:10px; padding:1rem; text-align:center; height:140px;">
+            <div style="font-size:2rem;">📄</div>
+            <div style="font-weight:700; margin:0.3rem 0 0.2rem; color:#ffffff;">PDF Export</div>
+            <div style="font-size:0.8rem; color:#cccccc;">Full analyst-style report with diagnosis, tables, and health score</div>
+        </div>
+        """, unsafe_allow_html=True,
+    )
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # -----------------------------------------------------------------------
+    # How to use steps
+    # -----------------------------------------------------------------------
+    st.markdown(
+        "<h3 style='text-align:center; margin-bottom:1rem;'>How to use</h3>",
+        unsafe_allow_html=True,
+    )
+
+    s1, s2, s3, s4 = st.columns(4)
+    for col, num, title, desc in [
+        (s1, "1", "Search", "Type any AMC or fund name in the sidebar search box"),
+        (s2, "2", "Add Funds", "Add 2-5 funds from different categories to your portfolio"),
+        (s3, "3", "Analyze", "Instantly see returns, risk metrics, charts, and health score"),
+        (s4, "4", "Export", "Download a full PDF report or get AI fund recommendations"),
+    ]:
+        col.markdown(
+            f"""
+            <div style="text-align:center; padding:0.8rem;">
+                <div style="
+                    width:36px; height:36px; border-radius:50%;
+                    background:#0D1B2A; color:white;
+                    font-size:1.1rem; font-weight:800;
+                    display:flex; align-items:center; justify-content:center;
+                    margin:0 auto 0.5rem auto;
+                ">{num}</div>
+                <div style="font-weight:700; margin-bottom:0.2rem;">{title}</div>
+                <div style="font-size:0.8rem; color:#6C757D;">{desc}</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
     st.divider()
+    st.caption(
+        "Data sourced from AMFI (via mftool) and NSE (via yfinance). "
+        "For informational purposes only — not financial advice."
+    )
 
-    c1, c2, c3, c4 = st.columns(4)
-    c1.info("🔍 **Search**\n\nType an AMC or fund name in the sidebar")
-    c2.info("➕ **Add Funds**\n\nPick funds from different companies to compare")
-    c3.info("📊 **Analyze**\n\nSee returns, risk, drawdown and correlation")
-    c4.info("🏥 **Score**\n\nGet a Portfolio Health Score out of 100")
+
+# ---------------------------------------------------------------------------
+# Fund Recommender Tab
+# ---------------------------------------------------------------------------
+
+def render_recommender_tab():
+    """
+    Renders the Fund Recommender tab.
+    Displays 3 model portfolio options (each with 3 diversified funds),
+    blended SIP projection, and plain-English reasoning per option.
+    """
+    from recommender import get_portfolio_recommendations, horizon_to_years
+
+    st.subheader("🤖 Fund Recommender")
+    st.caption(
+        "Tell us your risk appetite and horizon — we'll suggest **3 model portfolios**, "
+        "each with 3 diversified funds. Pick the one that matches your gut."
+    )
+    st.divider()
+
+    # --- User Inputs ---
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        risk = st.selectbox(
+            "🎯 Risk Appetite",
+            options=["Low", "Medium", "High"],
+            index=1,
+            help="Low → Debt/Hybrid | Medium → Large Cap/Flexi/ELSS | High → Mid/Small Cap",
+        )
+    with col2:
+        horizon = st.selectbox(
+            "⏳ Investment Horizon",
+            options=["Short (1Y)", "Medium (3Y)", "Long (5Y+)"],
+            index=1,
+            help="How long you plan to stay invested.",
+        )
+    with col3:
+        monthly_sip = st.number_input(
+            "💰 Monthly SIP Amount (₹)",
+            min_value=500,
+            max_value=500000,
+            value=5000,
+            step=500,
+            help="Total monthly SIP — split equally across 3 funds in each portfolio.",
+        )
+
+    st.divider()
+
+    # --- Profile summary ---
+    risk_color = {"Low": "🟢", "Medium": "🟡", "High": "🔴"}.get(risk, "🟡")
+    years = horizon_to_years(horizon)
+    st.markdown(
+        f"**Your Profile:** {risk_color} {risk} Risk &nbsp;|&nbsp; "
+        f"⏳ {horizon} &nbsp;|&nbsp; "
+        f"💰 ₹{monthly_sip:,}/month &nbsp;|&nbsp; "
+        f"₹{monthly_sip // 3:,}/fund/month (split equally)"
+    )
+
+    recommend_btn = st.button(
+        "🔍 Show My 3 Portfolio Options", type="primary", use_container_width=True
+    )
+
+    if not recommend_btn:
+        st.markdown("####")
+        i1, i2, i3 = st.columns(3)
+        i1.info("**Step 1**\n\nSet your risk level, horizon and SIP amount above.")
+        i2.info("**Step 2**\n\nClick the button — we'll build 3 diversified portfolio options.")
+        i3.info("**Step 3**\n\nCompare the options and pick the one that suits your thinking.")
+        return
+
+    # --- Run engine ---
+    progress_bar = st.progress(0, text="Analyzing fund universe...")
+    status_text  = st.empty()
+
+    def on_progress(current, total, fund_name):
+        pct = int((current / total) * 100)
+        progress_bar.progress(pct, text=f"Analyzing {current}/{total}: {fund_name[:50]}...")
+        status_text.caption(f"Fetching data for: **{fund_name}**")
+
+    try:
+        portfolios = get_portfolio_recommendations(
+            risk=risk,
+            horizon=horizon,
+            monthly_sip=float(monthly_sip),
+            progress_callback=on_progress,
+        )
+    except Exception as e:
+        progress_bar.empty()
+        status_text.empty()
+        st.error(
+            f"❌ Could not fetch fund data. Please check your internet connection.\n\nDetails: {e}"
+        )
+        return
+
+    progress_bar.empty()
+    status_text.empty()
+
+    if not portfolios:
+        st.warning("⚠️ No portfolios could be built. Try a different risk level or horizon.")
+        return
+
+    st.success(f"✅ Here are your 3 portfolio options for {risk} risk, {horizon} horizon!")
+    st.divider()
+
+    fund_rank_emoji = ["🥇", "🥈", "🥉"]
+
+    for portfolio in portfolios:
+        sip    = portfolio["sip"]
+        funds  = portfolio["funds"]
+
+        with st.container(border=True):
+
+            # --- Portfolio header ---
+            ph1, ph2 = st.columns([5, 1])
+            with ph1:
+                st.markdown(f"### {portfolio['name']}")
+                st.caption(portfolio["summary"])
+            with ph2:
+                st.markdown(
+                    f"<div style='text-align:center; padding:10px 6px; border-radius:8px; background:#000000;'>"
+                    f"<b style='font-size:13px; color:#ffffff;'>₹{sip['total_projected']:,.0f}</b><br>"
+                    f"<span style='font-size:10px; color:#cccccc;'>Projected ({years}Y)</span></div>",
+                    unsafe_allow_html=True,
+                )
+
+            st.markdown("---")
+
+            # --- 3 fund rows ---
+            for idx, fund in enumerate(funds):
+                m = fund["metrics"]
+                ann_ret = m.get("ann_return", np.nan)
+                sharpe  = m.get("sharpe", np.nan)
+                mdd     = m.get("max_drawdown", np.nan)
+                vol     = m.get("ann_volatility", np.nan)
+                emoji   = fund_rank_emoji[idx] if idx < len(fund_rank_emoji) else "•"
+
+                fc1, fc2, fc3, fc4, fc5 = st.columns([3, 1, 1, 1, 1])
+
+                with fc1:
+                    st.markdown(f"**{emoji} {fund['fund_name']}**")
+                    st.caption(f"{fund['category']} · `{fund['scheme_code']}` · {fund['reason']}")
+                fc2.metric("Ann. Return",  f"{ann_ret*100:.1f}%" if not np.isnan(ann_ret) else "N/A")
+                fc3.metric("Sharpe",       f"{sharpe:.2f}"        if not np.isnan(sharpe)  else "N/A")
+                fc4.metric("Max Drawdown", f"{mdd*100:.1f}%"      if not np.isnan(mdd)     else "N/A")
+                fc5.metric("Volatility",   f"{vol*100:.1f}%"      if not np.isnan(vol)     else "N/A")
+
+                if idx < len(funds) - 1:
+                    st.markdown("")   # small spacer between funds
+
+            st.markdown("---")
+
+            # --- Blended SIP summary ---
+            s1, s2, s3, s4 = st.columns(4)
+            s1.metric("💰 Per Fund SIP",    f"₹{sip['per_fund_sip']:,.0f}/mo",
+                      help="Your monthly SIP split equally across the 3 funds.")
+            s2.metric("📦 Total Invested",  f"₹{sip['total_invested']:,.0f}",
+                      help=f"Total amount invested over {years} years.")
+            s3.metric(f"🚀 Projected Corpus ({years}Y)", f"₹{sip['total_projected']:,.0f}",
+                      help="Estimated corpus based on each fund's historical annual return.")
+            s4.metric("📊 Total Gain",      f"₹{sip['total_gain']:,.0f}",
+                      delta=f"+{sip['gain_pct']:.1f}% over invested",
+                      help="Gain = Projected corpus − Total invested.")
+
+        st.markdown("####")
+
+    # --- Disclaimer ---
+    st.divider()
+    st.caption(
+        "⚠️ **Disclaimer:** Recommendations are based on historical performance metrics only. "
+        "Past performance is not a guarantee of future returns. "
+        "This tool is for educational purposes and does not constitute financial advice. "
+        "Please consult a SEBI-registered financial advisor before investing."
+    )
