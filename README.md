@@ -158,4 +158,4 @@ This tool is for **informational and educational purposes only**. It does not co
 
 ---
 
-*Built with real data, real formulas, and no fluff.*
+*Built with real data*
